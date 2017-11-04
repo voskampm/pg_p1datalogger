@@ -1,4 +1,4 @@
-#!python3
+#!/usr/bin/python3
 # P1 Datalogger
 # Release 0.8 / M401 / Iskra / S0 / S0prd / prd / pv / pvo / emoncmso
 # Author J. van der Linde
@@ -36,6 +36,7 @@ import http.client
 import urllib.parse
 import urllib.request
 from urllib.error import URLError, HTTPError
+
 MySQL_loaded = True
 try:
     import mysql.connector
@@ -46,6 +47,14 @@ try:
     import sqlite3
 except ImportError:
     SQLite_loaded=False
+
+# Postgres module. Use 'apt-get install python3-psycopg2' to install the module on Debian Jesse
+try:
+    import psycopg2
+    Postgres_loaded=True
+except ImportError:
+    Postgres_loaded=False
+print ("Postgres module loaded = %s" % Postgres_loaded )  
 
 from time import sleep
 import time as _time
@@ -423,6 +432,311 @@ def csv_p1_telegram():
 ################
 #DB output     #
 ################
+def postgres_p1_telegram():
+    query = '''
+      select insert_p_p1_datagram (
+          p_p1_timestamp := p1_timestamp 
+        , p_p1_meter_supplier := p1_meter_supplier
+        , p_p1_header := p1_header
+        , p_p1_dsmr_version := p1_dsmr_version
+        , p_p1_equipment_id := p1_equipment_id
+        , p_p1_meterreading_in_1 := p1_meterreading_in_1
+        , p_p1_unitmeterreading_in_1 := p1_unitmeterreading_in_1
+        , p_p1_meterreading_in_2 := p1_meterreading_in_2
+        , p_p1_unitmeterreading_in_2 := p1_unitmeterreading_in_2
+        , p_p1_meterreading_out_1 := p1_meterreading_out_1
+        , p_p1_unitmeterreading_out_1 := p1_unitmeterreading_out_1
+        , p_p1_meterreading_out_2 := p1_meterreading_out_2
+        , p_p1_unitmeterreading_out_2 := p1_unitmeterreading_out_2
+        , p_p1_meterreading_prd := p1_meterreading_prd
+        , p_p1_unitmeterreading_prd := p1_unitmeterreading_prd
+        , p_p1_current_tariff := p1_current_tariff
+        , p_p1_current_power_in := p1_current_power_in
+        , p_p1_unit_current_power_in := p1_unit_current_power_in
+        , p_p1_current_power_out := p1_current_power_out
+        , p_p1_unit_current_power_out := p1_unit_current_power_out
+        , p_p1_current_power_prd := p1_current_power_prd
+        , p_p1_unit_current_power_prd := p1_unit_current_power_prd
+        , p_p1_current_threshold := p1_current_threshold
+        , p_p1_unit_current_threshold := p1_unit_current_threshold
+        , p_p1_current_switch_position := p1_current_switch_position
+        , p_p1_powerfailures := p1_powerfailures
+        , p_p1_long_powerfailures := p1_long_powerfailures
+        , p_p1_long_powerfailures_log := p1_long_powerfailures_log
+        , p_p1_voltage_sags_l1 := p1_voltage_sags_l1
+        , p_p1_voltage_sags_l2 := p1_voltage_sags_l2
+        , p_p1_voltage_sags_l3 := p1_voltage_sags_l3
+        , p_p1_voltage_swells_l1 := p1_voltage_swells_l1
+        , p_p1_voltage_swells_l2 := p1_voltage_swells_l2
+        , p_p1_voltage_swells_l3 := p1_voltage_swells_l3
+        , p_p1_instantaneous_current_l1 := p1_instantaneous_current_l1
+        , p_p1_unit_instantaneous_current_l1 := p1_unit_instantaneous_current_l1
+        , p_p1_instantaneous_current_l2 := p1_instantaneous_current_l2
+        , p_p1_unit_instantaneous_current_l2 := p1_unit_instantaneous_current_l2
+        , p_p1_instantaneous_current_l3 := p1_instantaneous_current_l3
+        , p_p1_unit_instantaneous_current_l3 := p1_unit_instantaneous_current_l3
+        , p_p1_voltage_l1 := p1_voltage_l1
+        , p_p1_unit_voltage_l1 := p1_unit_voltage_l1
+        , p_p1_voltage_l2 := p1_voltage_l2
+        , p_p1_unit_voltage_l2 := p1_unit_voltage_l2
+        , p_p1_voltage_l3 := p1_voltage_l3
+        , p_p1_unit_voltage_l3 := p1_unit_voltage_l3
+        , p_p1_instantaneous_active_power_in_l1 := p1_instantaneous_active_power_in_l1
+        , p_p1_unit_instantaneous_active_power_in_l1 := p1_unit_instantaneous_active_power_in_l1
+        , p_p1_instantaneous_active_power_in_l2 := p1_instantaneous_active_power_in_l2
+        , p_p1_unit_instantaneous_active_power_in_l2 := p1_unit_instantaneous_active_power_in_l2
+        , p_p1_instantaneous_active_power_in_l3 := p1_instantaneous_active_power_in_l3
+        , p_p1_unit_instantaneous_active_power_in_l3 := p1_unit_instantaneous_active_power_in_l3
+        , p_p1_instantaneous_active_power_out_l1 := p1_instantaneous_active_power_out_l1
+        , p_p1_unit_instantaneous_active_power_out_l1 := p1_unit_instantaneous_active_power_out_l1
+        , p_p1_instantaneous_active_power_out_l2 := p1_instantaneous_active_power_out_l2
+        , p_p1_unit_instantaneous_active_power_out_l2 := p1_unit_instantaneous_active_power_out_l2
+        , p_p1_instantaneous_active_power_out_l3 := p1_instantaneous_active_power_out_l3
+        , p_p1_unit_instantaneous_active_power_out_l3 := p1_unit_instantaneous_active_power_out_l3
+        , p_p1_message_code := p1_message_code
+        , p_p1_message_text := p1_message_text
+        , p_p1_channel_1_id := p1_channel_1_id
+        , p_p1_channel_1_type_id := p1_channel_1_type_id
+        , p_p1_channel_1_type_desc := p1_channel_1_type_desc
+        , p_p1_channel_1_equipment_id := p1_channel_1_equipment_id
+        , p_p1_channel_1_timestamp := p1_channel_1_timestamp
+        , p_p1_channel_1_meterreading := p1_channel_1_meterreading
+        , p_p1_channel_1_unit := p1_channel_1_unit
+        , p_p1_channel_1_valveposition := p1_channel_1_valveposition
+        , p_p1_channel_2_id := p1_channel_2_id
+        , p_p1_channel_2_type_id := p1_channel_2_type_id
+        , p_p1_channel_2_type_desc := p1_channel_2_type_desc
+        , p_p1_channel_2_equipment_id := p1_channel_2_equipment_id
+        , p_p1_channel_2_timestamp := p1_channel_2_timestamp
+        , p_p1_channel_2_meterreading := p1_channel_2_meterreading
+        , p_p1_channel_2_unit := p1_channel_2_unit
+        , p_p1_channel_2_valveposition := p1_channel_2_valveposition
+        , p_p1_channel_3_id := p1_channel_3_id
+        , p_p1_channel_3_type_id := p1_channel_3_type_id
+        , p_p1_channel_3_type_desc := p1_channel_3_type_desc
+        , p_p1_channel_3_equipment_id := p1_channel_3_equipment_id
+        , p_p1_channel_3_timestamp := p1_channel_3_timestamp
+        , p_p1_channel_3_meterreading := p1_channel_3_meterreading
+        , p_p1_channel_3_unit := p1_channel_3_unit
+        , p_p1_channel_3_valveposition := p1_channel_3_valveposition
+        , p_p1_channel_4_id := p1_channel_4_id
+        , p_p1_channel_4_type_id := p1_channel_4_type_id
+        , p_p1_channel_4_type_desc := p1_channel_4_type_desc
+        , p_p1_channel_4_equipment_id := p1_channel_4_equipment_id
+        , p_p1_channel_4_timestamp := p1_channel_4_timestamp
+        , p_p1_channel_4_meterreading := p1_channel_4_meterreading
+        , p_p1_channel_4_unit := p1_channel_4_unit
+        , p_p1_channel_4_valveposition := p1_channel_4_valveposition
+      )
+      from (
+    '''    
+
+    values = "values (\'" + \
+         p1_timestamp_utc + "\::timestamp',\'" + \
+         p1_meter_supplier + "\',\'" + \
+         p1_header + "\',\'" + \
+         p1_dsmr_version + "\',\'" + \
+         p1_equipment_id + "\'," + \
+         str(p1_meterreading_in_1) + ",\'" + \
+         p1_unitmeterreading_in_1 + "\',\'" + \
+         str(p1_meterreading_in_2) + "\',\'" + \
+         p1_unitmeterreading_in_2 + "\',\'" + \
+         str(p1_meterreading_out_1) + "\',\'" +\
+         p1_unitmeterreading_out_1 + "\',\'" + \
+         str(p1_meterreading_out_2) + "\',\'" + \
+         p1_unitmeterreading_out_2 + "\',\'" + \
+         str(p1_meterreading_prd) + "\',\'" + \
+         p1_unitmeterreading_prd + "\',\'" + \
+         str(p1_current_tariff) + "\',\'" + \
+         str(p1_current_power_in) + "\',\'" + \
+         p1_unit_current_power_in + "\',\'" + \
+         str(p1_current_power_out) + "\',\'" + \
+         p1_unit_current_power_out + "\',\'" + \
+         str(p1_current_power_prd) + "\',\'" + \
+         p1_unit_current_power_prd + "\',\'" + \
+         str(p1_current_threshold) + "\',\'" + \
+         p1_unit_current_threshold + "\',\'" + \
+         str(p1_current_switch_position) + "\',\'" + \
+         str(p1_powerfailures) + "\',\'" + \
+         str(p1_long_powerfailures) + "\',\'" + \
+         p1_long_powerfailures_log + "\',\'" + \
+         str(p1_voltage_sags_l1)  + "\',\'" + \
+         str(p1_voltage_sags_l2) + "\',\'" + \
+         str(p1_voltage_sags_l3) + "\',\'" + \
+         str(p1_voltage_swells_l1) + "\',\'" + \
+         str(p1_voltage_swells_l2) + "\',\'" + \
+         str(p1_voltage_swells_l3) + "\',\'" + \
+         str(p1_instantaneous_current_l1)  + "\',\'" + \
+         p1_unit_instantaneous_current_l1 + "\',\'" + \
+         str(p1_instantaneous_current_l2)  + "\',\'" + \
+         p1_unit_instantaneous_current_l2 + "\',\'" + \
+         str(p1_instantaneous_current_l3)  + "\',\'" + \
+         p1_unit_instantaneous_current_l3 + "\',\'" + \
+         str(p1_voltage_l1) + "\',\'" + \
+         p1_unit_voltage_l1 + "\',\'" + \
+         str(p1_voltage_l2) + "\',\'" + \
+         p1_unit_voltage_l2 + "\',\'" + \
+         str(p1_voltage_l3) + "\',\'" + \
+         p1_unit_voltage_l3 + "\',\'" + \
+         str(p1_instantaneous_active_power_in_l1)  + "\',\'" + \
+         p1_unit_instantaneous_active_power_in_l1 + "\',\'" + \
+         str(p1_instantaneous_active_power_in_l2)  + "\',\'" + \
+         p1_unit_instantaneous_active_power_in_l2 + "\',\'" + \
+         str(p1_instantaneous_active_power_in_l3)  + "\',\'" + \
+         p1_unit_instantaneous_active_power_in_l3 + "\',\'" + \
+         str(p1_instantaneous_active_power_out_l1)  + "\',\'" + \
+         p1_unit_instantaneous_active_power_out_l1 + "\',\'" + \
+         str(p1_instantaneous_active_power_out_l2)  + "\',\'" + \
+         p1_unit_instantaneous_active_power_out_l2 + "\',\'" + \
+         str(p1_instantaneous_active_power_out_l3)  + "\',\'" + \
+         p1_unit_instantaneous_active_power_out_l3 + "\',\'" + \
+         p1_message_code + "\',\'" + \
+         p1_message_text + "\',\'" + \
+         str(p1_channel_1.id) + "\',\'" + \
+         str(p1_channel_1.type_id) + "\',\'" +  \
+         p1_channel_1.type_desc + "\',\'" + \
+         str(p1_channel_1.equipment_id) + "\',\'" + \
+         p1_channel_1.timestamp + "\',\'" + \
+         str(p1_channel_1.meterreading) + "\',\'" + \
+         p1_channel_1.unit + "\',\'" + \
+         str(p1_channel_1.valveposition) + "\',\'" + \
+         str(p1_channel_2.id) + "\',\'" + \
+         str(p1_channel_2.type_id) + "\',\'" +  \
+         p1_channel_2.type_desc + "\',\'" + \
+         str(p1_channel_2.equipment_id) + "\',\'" + \
+         p1_channel_2.timestamp + "\',\'" + \
+         str(p1_channel_2.meterreading) + "\',\'" + \
+         p1_channel_2.unit + "\',\'" + \
+         str(p1_channel_2.valveposition) + "\',\'" + \
+         str(p1_channel_3.id) + "\',\'" + \
+         str(p1_channel_3.type_id) + "\',\'" + \
+         p1_channel_3.type_desc + "\',\'" + \
+         str(p1_channel_3.equipment_id) + "\',\'" + \
+         p1_channel_3.timestamp + "\',\'" + \
+         str(p1_channel_3.meterreading) + "\',\'" + \
+         p1_channel_3.unit + "\',\'" + \
+         str(p1_channel_3.valveposition) + "\',\'" + \
+         str(p1_channel_4.id) + "\',\'" + \
+         str(p1_channel_4.type_id) + "\',\'" + \
+         p1_channel_4.type_desc + "\',\'" + \
+         str(p1_channel_4.equipment_id) + "\',\'" + \
+         p1_channel_4.timestamp + "\',\'" + \
+         str(p1_channel_4.meterreading) + "\',\'" + \
+         p1_channel_4.unit + "\',\'" + \
+         str(p1_channel_4.valveposition)  + "\')"
+
+    query = query + values + '''
+) as x (
+    p1_timestamp
+  , p1_meter_supplier
+  , p1_header
+  , p1_dsmr_version
+  , p1_equipment_id
+  , p1_meterreading_in_1
+  , p1_unitmeterreading_in_1
+  , p1_meterreading_in_2
+  , p1_unitmeterreading_in_2
+  , p1_meterreading_out_1
+  , p1_unitmeterreading_out_1
+  , p1_meterreading_out_2
+  , p1_unitmeterreading_out_2
+  , p1_meterreading_prd
+  , p1_unitmeterreading_prd
+  , p1_current_tariff
+  , p1_current_power_in
+  , p1_unit_current_power_in
+  , p1_current_power_out
+  , p1_unit_current_power_out
+  , p1_current_power_prd
+  , p1_unit_current_power_prd
+  , p1_current_threshold
+  , p1_unit_current_threshold
+  , p1_current_switch_position
+  , p1_powerfailures
+  , p1_long_powerfailures
+  , p1_long_powerfailures_log
+  , p1_voltage_sags_l1
+  , p1_voltage_sags_l2
+  , p1_voltage_sags_l3
+  , p1_voltage_swells_l1
+  , p1_voltage_swells_l2
+  , p1_voltage_swells_l3
+  , p1_instantaneous_current_l1
+  , p1_unit_instantaneous_current_l1
+  , p1_instantaneous_current_l2
+  , p1_unit_instantaneous_current_l2
+  , p1_instantaneous_current_l3
+  , p1_unit_instantaneous_current_l3
+  , p1_voltage_l1
+  , p1_unit_voltage_l1
+  , p1_voltage_l2
+  , p1_unit_voltage_l2
+  , p1_voltage_l3
+  , p1_unit_voltage_l3
+  , p1_instantaneous_active_power_in_l1
+  , p1_unit_instantaneous_active_power_in_l1
+  , p1_instantaneous_active_power_in_l2
+  , p1_unit_instantaneous_active_power_in_l2
+  , p1_instantaneous_active_power_in_l3
+  , p1_unit_instantaneous_active_power_in_l3
+  , p1_instantaneous_active_power_out_l1
+  , p1_unit_instantaneous_active_power_out_l1
+  , p1_instantaneous_active_power_out_l2
+  , p1_unit_instantaneous_active_power_out_l2
+  , p1_instantaneous_active_power_out_l3
+  , p1_unit_instantaneous_active_power_out_l3
+  , p1_message_code
+  , p1_message_text
+  , p1_channel_1_id
+  , p1_channel_1_type_id
+  , p1_channel_1_type_desc
+  , p1_channel_1_equipment_id
+  , p1_channel_1_timestamp
+  , p1_channel_1_meterreading
+  , p1_channel_1_unit
+  , p1_channel_1_valveposition
+  , p1_channel_2_id
+  , p1_channel_2_type_id
+  , p1_channel_2_type_desc
+  , p1_channel_2_equipment_id
+  , p1_channel_2_timestamp
+  , p1_channel_2_meterreading
+  , p1_channel_2_unit
+  , p1_channel_2_valveposition
+  , p1_channel_3_id
+  , p1_channel_3_type_id
+  , p1_channel_3_type_desc
+  , p1_channel_3_equipment_id
+  , p1_channel_3_timestamp
+  , p1_channel_3_meterreading
+  , p1_channel_3_unit
+  , p1_channel_3_valveposition
+  , p1_channel_4_id
+  , p1_channel_4_type_id
+  , p1_channel_4_type_desc
+  , p1_channel_4_equipment_id
+  , p1_channel_4_timestamp
+  , p1_channel_4_meterreading
+  , p1_channel_4_unit
+  , p1_channel_4_valveposition
+)      
+      ''' 
+    print(query)
+    try:
+        db = psycopg2.connect(service="oaddocker")
+        c = db.cursor()
+        c.execute (query)
+        db.commit()
+        print ("P1 telegram in Postgres database op: %s (UTC) / %s (Local)" % p1_timestamp_utc, p1_timestamp)
+        c.close()
+        db.close()
+    except:
+        show_error()
+        print ("Fout bij het openen van / schrijven naar Postgres database. P1 Telegram wordt gelogd in csv-bestand."  )      
+        csv_p1_telegram()
+    return    
+
+
 def mysql_p1_telegram():
     query = "insert into p1_log values (\'" + \
          p1_timestamp_utc + "\',\'" + \
@@ -1059,7 +1373,7 @@ parser.add_argument("-c", "--comport", help="COM-port name (COMx or /dev/...) th
 
 
 parser.add_argument("-l", "--loginterval", help="Log frequency in seconds, default=30", default=30, type=int)
-parser.add_argument("-o", "--output", help="Output mode, default='screen'", default='screen', choices=['screen', 'csv', 'mysql', 'sqlite'])
+parser.add_argument("-o", "--output", help="Output mode, default='screen'", default='screen', choices=['screen', 'csv', 'mysql', 'sqlite', 'postgres'])
 parser.add_argument("-systime", "--systemtime", help="Use system-time instead of P1 meter-time, default='N'", default='N', choices=['Y', 'N'])
 
 parser.add_argument("-pvo", "--pvoutput", help="Output to PVOutput ==EXPERIMENTAL==, default='N'", default='N', choices=['Y', 'N'])
@@ -1155,6 +1469,10 @@ if (output_mode == "mysql") and MySQL_loaded:
     print ("- User    : %s" % p1_mysql_user)
     print ("- Password: %s" % p1_mysql_passwd)
     print ("- Database: %s" % p1_mysql_db)
+if (output_mode == "postgres") and not Postgres_loaded:
+   print("%s: warning: Postgres Connector/Python not found. Output mode 'postgres' not allowed. Output mode 'csv' used instead." % progname)
+   output_mode = "csv"
+   import_db = False
 if (output_mode == "mysql") and not MySQL_loaded:
    print("%s: warning: MySQL Connector/Python not found. Output mode 'mysql' not allowed. Output mode 'csv' used instead." % progname)
    output_mode = "csv"
@@ -1852,7 +2170,8 @@ while 1:
                 if output_mode=="csv": csv_p1_telegram()
 #Output to database
                 if output_mode=="mysql": mysql_p1_telegram()
-                if output_mode=="sqlite": sqlite_p1_telegram()             
+                if output_mode=="sqlite": sqlite_p1_telegram()     
+                if output_mode=="postgres": postgres_p1_telegram()        
 #Output to PVOutput.org
                 if pvo_output: pvo_p1_telegram()
 #Output to EmonCMS
