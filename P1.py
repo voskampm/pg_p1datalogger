@@ -434,7 +434,7 @@ def csv_p1_telegram():
 ################
 def postgres_p1_telegram():
     query = '''
-      select insert_p_p1_datagram (
+      select insert_p1_datagram (
           p_p1_timestamp := p1_timestamp 
         , p_p1_meter_supplier := p1_meter_supplier
         , p_p1_header := p1_header
@@ -532,98 +532,98 @@ def postgres_p1_telegram():
     '''    
 
     values = "values (\'" + \
-         p1_timestamp_utc + "\::timestamp',\'" + \
+         p1_timestamp_utc + "\'::timestamp,\'" + \
          p1_meter_supplier + "\',\'" + \
          p1_header + "\',\'" + \
          p1_dsmr_version + "\',\'" + \
          p1_equipment_id + "\'," + \
          str(p1_meterreading_in_1) + ",\'" + \
-         p1_unitmeterreading_in_1 + "\',\'" + \
-         str(p1_meterreading_in_2) + "\',\'" + \
-         p1_unitmeterreading_in_2 + "\',\'" + \
-         str(p1_meterreading_out_1) + "\',\'" +\
-         p1_unitmeterreading_out_1 + "\',\'" + \
-         str(p1_meterreading_out_2) + "\',\'" + \
-         p1_unitmeterreading_out_2 + "\',\'" + \
-         str(p1_meterreading_prd) + "\',\'" + \
-         p1_unitmeterreading_prd + "\',\'" + \
-         str(p1_current_tariff) + "\',\'" + \
-         str(p1_current_power_in) + "\',\'" + \
-         p1_unit_current_power_in + "\',\'" + \
-         str(p1_current_power_out) + "\',\'" + \
-         p1_unit_current_power_out + "\',\'" + \
-         str(p1_current_power_prd) + "\',\'" + \
-         p1_unit_current_power_prd + "\',\'" + \
-         str(p1_current_threshold) + "\',\'" + \
-         p1_unit_current_threshold + "\',\'" + \
-         str(p1_current_switch_position) + "\',\'" + \
-         str(p1_powerfailures) + "\',\'" + \
-         str(p1_long_powerfailures) + "\',\'" + \
-         p1_long_powerfailures_log + "\',\'" + \
-         str(p1_voltage_sags_l1)  + "\',\'" + \
-         str(p1_voltage_sags_l2) + "\',\'" + \
-         str(p1_voltage_sags_l3) + "\',\'" + \
-         str(p1_voltage_swells_l1) + "\',\'" + \
-         str(p1_voltage_swells_l2) + "\',\'" + \
-         str(p1_voltage_swells_l3) + "\',\'" + \
-         str(p1_instantaneous_current_l1)  + "\',\'" + \
-         p1_unit_instantaneous_current_l1 + "\',\'" + \
-         str(p1_instantaneous_current_l2)  + "\',\'" + \
-         p1_unit_instantaneous_current_l2 + "\',\'" + \
-         str(p1_instantaneous_current_l3)  + "\',\'" + \
-         p1_unit_instantaneous_current_l3 + "\',\'" + \
-         str(p1_voltage_l1) + "\',\'" + \
-         p1_unit_voltage_l1 + "\',\'" + \
-         str(p1_voltage_l2) + "\',\'" + \
-         p1_unit_voltage_l2 + "\',\'" + \
-         str(p1_voltage_l3) + "\',\'" + \
-         p1_unit_voltage_l3 + "\',\'" + \
-         str(p1_instantaneous_active_power_in_l1)  + "\',\'" + \
-         p1_unit_instantaneous_active_power_in_l1 + "\',\'" + \
-         str(p1_instantaneous_active_power_in_l2)  + "\',\'" + \
-         p1_unit_instantaneous_active_power_in_l2 + "\',\'" + \
-         str(p1_instantaneous_active_power_in_l3)  + "\',\'" + \
-         p1_unit_instantaneous_active_power_in_l3 + "\',\'" + \
-         str(p1_instantaneous_active_power_out_l1)  + "\',\'" + \
-         p1_unit_instantaneous_active_power_out_l1 + "\',\'" + \
-         str(p1_instantaneous_active_power_out_l2)  + "\',\'" + \
-         p1_unit_instantaneous_active_power_out_l2 + "\',\'" + \
-         str(p1_instantaneous_active_power_out_l3)  + "\',\'" + \
+         p1_unitmeterreading_in_1 + "\'," + \
+         str(p1_meterreading_in_2) + ",\'" + \
+         p1_unitmeterreading_in_2 + "\'," + \
+         str(p1_meterreading_out_1) + ",\'" +\
+         p1_unitmeterreading_out_1 + "\'," + \
+         str(p1_meterreading_out_2) + ",\'" + \
+         p1_unitmeterreading_out_2 + "\'," + \
+         str(p1_meterreading_prd) + ",\'" + \
+         p1_unitmeterreading_prd + "\'," + \
+         str(p1_current_tariff) + "," + \
+         str(p1_current_power_in) + ",\'" + \
+         p1_unit_current_power_in + "\'," + \
+         str(p1_current_power_out) + ",\'" + \
+         p1_unit_current_power_out + "\'," + \
+         str(p1_current_power_prd) + ",\'" + \
+         p1_unit_current_power_prd + "\'," + \
+         str(p1_current_threshold) + ",\'" + \
+         p1_unit_current_threshold + "\'," + \
+         str(p1_current_switch_position) + "," + \
+         str(p1_powerfailures) + "," + \
+         str(p1_long_powerfailures) + ",\'" + \
+         p1_long_powerfailures_log + "\'," + \
+         str(p1_voltage_sags_l1)  + "," + \
+         str(p1_voltage_sags_l2) + "," + \
+         str(p1_voltage_sags_l3) + "," + \
+         str(p1_voltage_swells_l1) + "," + \
+         str(p1_voltage_swells_l2) + "," + \
+         str(p1_voltage_swells_l3) + "," + \
+         str(p1_instantaneous_current_l1)  + ",\'" + \
+         p1_unit_instantaneous_current_l1 + "\'," + \
+         str(p1_instantaneous_current_l2)  + ",\'" + \
+         p1_unit_instantaneous_current_l2 + "\'," + \
+         str(p1_instantaneous_current_l3)  + ",\'" + \
+         p1_unit_instantaneous_current_l3 + "\'," + \
+         str(p1_voltage_l1) + ",\'" + \
+         p1_unit_voltage_l1 + "\'," + \
+         str(p1_voltage_l2) + ",\'" + \
+         p1_unit_voltage_l2 + "\'," + \
+         str(p1_voltage_l3) + ",\'" + \
+         p1_unit_voltage_l3 + "\'," + \
+         str(p1_instantaneous_active_power_in_l1)  + ",\'" + \
+         p1_unit_instantaneous_active_power_in_l1 + "\'," + \
+         str(p1_instantaneous_active_power_in_l2)  + ",\'" + \
+         p1_unit_instantaneous_active_power_in_l2 + "\'," + \
+         str(p1_instantaneous_active_power_in_l3)  + ",\'" + \
+         p1_unit_instantaneous_active_power_in_l3 + "\'," + \
+         str(p1_instantaneous_active_power_out_l1)  + ",\'" + \
+         p1_unit_instantaneous_active_power_out_l1 + "\'," + \
+         str(p1_instantaneous_active_power_out_l2)  + ",\'" + \
+         p1_unit_instantaneous_active_power_out_l2 + "\'," + \
+         str(p1_instantaneous_active_power_out_l3)  + ",\'" + \
          p1_unit_instantaneous_active_power_out_l3 + "\',\'" + \
          p1_message_code + "\',\'" + \
-         p1_message_text + "\',\'" + \
-         str(p1_channel_1.id) + "\',\'" + \
-         str(p1_channel_1.type_id) + "\',\'" +  \
-         p1_channel_1.type_desc + "\',\'" + \
-         str(p1_channel_1.equipment_id) + "\',\'" + \
-         p1_channel_1.timestamp + "\',\'" + \
-         str(p1_channel_1.meterreading) + "\',\'" + \
-         p1_channel_1.unit + "\',\'" + \
-         str(p1_channel_1.valveposition) + "\',\'" + \
-         str(p1_channel_2.id) + "\',\'" + \
-         str(p1_channel_2.type_id) + "\',\'" +  \
-         p1_channel_2.type_desc + "\',\'" + \
-         str(p1_channel_2.equipment_id) + "\',\'" + \
-         p1_channel_2.timestamp + "\',\'" + \
-         str(p1_channel_2.meterreading) + "\',\'" + \
-         p1_channel_2.unit + "\',\'" + \
-         str(p1_channel_2.valveposition) + "\',\'" + \
-         str(p1_channel_3.id) + "\',\'" + \
-         str(p1_channel_3.type_id) + "\',\'" + \
-         p1_channel_3.type_desc + "\',\'" + \
-         str(p1_channel_3.equipment_id) + "\',\'" + \
-         p1_channel_3.timestamp + "\',\'" + \
-         str(p1_channel_3.meterreading) + "\',\'" + \
-         p1_channel_3.unit + "\',\'" + \
-         str(p1_channel_3.valveposition) + "\',\'" + \
-         str(p1_channel_4.id) + "\',\'" + \
-         str(p1_channel_4.type_id) + "\',\'" + \
-         p1_channel_4.type_desc + "\',\'" + \
-         str(p1_channel_4.equipment_id) + "\',\'" + \
-         p1_channel_4.timestamp + "\',\'" + \
-         str(p1_channel_4.meterreading) + "\',\'" + \
-         p1_channel_4.unit + "\',\'" + \
-         str(p1_channel_4.valveposition)  + "\')"
+         p1_message_text + "\'," + \
+         str(p1_channel_1.id) + "," + \
+         str(p1_channel_1.type_id) + ",\'" +  \
+         p1_channel_1.type_desc + "\'," + \
+         str(p1_channel_1.equipment_id) + ",\'" + \
+         p1_channel_1.timestamp + "\'::timestamp," + \
+         str(p1_channel_1.meterreading) + ",\'" + \
+         p1_channel_1.unit + "\'," + \
+         str(p1_channel_1.valveposition) + "," + \
+         str(p1_channel_2.id) + "," + \
+         str(p1_channel_2.type_id) + ",\'" +  \
+         p1_channel_2.type_desc + "\'," + \
+         str(p1_channel_2.equipment_id) + ",\'" + \
+         p1_channel_2.timestamp + "\'::timestamp," + \
+         str(p1_channel_2.meterreading) + ",\'" + \
+         p1_channel_2.unit + "\'," + \
+         str(p1_channel_2.valveposition) + "," + \
+         str(p1_channel_3.id) + "," + \
+         str(p1_channel_3.type_id) + ",\'" + \
+         p1_channel_3.type_desc + "\'," + \
+         str(p1_channel_3.equipment_id) + ",\'" + \
+         p1_channel_3.timestamp + "\'::timestamp," + \
+         str(p1_channel_3.meterreading) + ",\'" + \
+         p1_channel_3.unit + "\'," + \
+         str(p1_channel_3.valveposition) + "," + \
+         str(p1_channel_4.id) + "," + \
+         str(p1_channel_4.type_id) + ",\'" + \
+         p1_channel_4.type_desc + "\'," + \
+         str(p1_channel_4.equipment_id) + ",\'" + \
+         p1_channel_4.timestamp + "\'::timestamp," + \
+         str(p1_channel_4.meterreading) + ",\'" + \
+         p1_channel_4.unit + "\'," + \
+         str(p1_channel_4.valveposition)  + ")"
 
     query = query + values + '''
 ) as x (
